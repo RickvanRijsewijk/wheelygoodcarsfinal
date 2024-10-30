@@ -1,18 +1,67 @@
-<!-- resources/views/layouts/next-page.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Page</title>
+@section('content')
     <style>
+        .progress-container {
+            width: 100%;
+            background-color: #b9b9b9;
+            border-radius: 5px;
+            border: 2px black;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+
+        .centered {
+            background-image: url('images/kentekenplaat.png');
+            background-position: 5px center;
+            background-repeat: no-repeat;
+            position: absolute;
+            align-items: center;
+        }
+
+        .kentekencheck-input #kenteken {
+            text-align: center;
+            font-weight: bold;
+            font-size: 28px;
+            width: 225px;
+        }
+
+        .kenteken-input-field {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAvCAMAAADdAborAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABCUExURSVX19fd9S1UsihUwSVUy////zNVpau57CRV1Edcg4N9SK+ZLGVrYHBwUvT2/VRicEVr232U49KwGZqMPNm1FcjQ8koJI5cAAACiSURBVCjPzZBJFsQgCEQrSFScMt//qq15rR1d9yIsfNSnQBT4X9hOWEhU4KaD4+CtHLqS6MAM8V+LlJZ7ipWS0Bmqk/ZYCrq1Wk351M8LS83Hh94FWOQHOBSL+oE7Jd8s5Jcy2jVQUysL57V0pFpxB8SRnG2aUsiPU8yPjTrx1phNPozBZCpI2wBMWnuA6RrAmrYeYEsDwDUPYE0ZzDle/D0fwJgE4zMjXtEAAAAASUVORK5CYII=) left no-repeat #ffce00;
+            height: 50px;
+            padding-left: 100px;
+            width: 300px !important;
+            text-align: center;
+            border-radius: 5px;
+            border: 0.5px solid black;
+            display: block;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
         body {
             font-family: Arial, sans-serif;
         }
 
         .form-container {
-            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -41,10 +90,6 @@
             border-radius: 5px;
         }
 
-        .form-group .readonly-field {
-            background-color: #eee;
-        }
-
         .form-group .small-input {
             width: calc(50% - 10px);
         }
@@ -59,16 +104,6 @@
             margin-right: 10px;
         }
 
-        .license-plate {
-            background-color: #ffd700;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
         .submit-button {
             background-color: #d2691e;
             color: #fff;
@@ -76,18 +111,20 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
         }
 
         .submit-button:hover {
             background-color: #c15a1b;
         }
     </style>
-</head>
 
-@extends('layouts.app')
+    <div class="progress-container">
+        <div class="progress" role="progressbar" aria-label="Animated striped example">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%;">Step 2 of 2</div>
+        </div>
+    </div>
+    <a href="{{ route('aanbod-plaatsen') }}">Terug</a>
 
-@section('content')
     <div class="form-container">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -99,9 +136,18 @@
             </div>
         @endif
         <h1 class="form-title">Nieuw aanbod</h1>
-
         <!-- License Plate Display -->
-        <div class="license-plate">{{ $inputText }}</div>
+        <div class="form-group mt-5 d-flex justify-content-center align-middle">
+            <div class="kenteken-container">
+                <div class="kenteken-holder">
+                    <div class="kenteken-input form-group">
+                        <input type="text" id="license_plate" name="license_plate"
+                            class="form-control kenteken-input-field" style="background-color: #ffce00"
+                            value="{{ $inputText }}" required readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Display prefilled form field -->
         <form action="{{ route('aanbod.toDB') }}" method="POST">
@@ -112,59 +158,78 @@
             <!-- Merk -->
             <div class="form-group">
                 <label for="brand">Merk</label>
-                <input type="text" id="brand" name="brand" class="readonly-field">
+                <input type="text" id="brand" name="brand" value="{{ $carInfo[0]->merk ?? '' }}">
             </div>
 
             <!-- Model -->
             <div class="form-group">
                 <label for="model">Model</label>
-                <input type="text" id="model" name="model" class="readonly-field">
+                <input type="text" id="model" name="model" value="{{ $carInfo[0]->handelsbenaming ?? '' }}">
             </div>
 
-            <!-- Inline group for Zitplaatsen, Aantal deuren, Massa rijklaar -->
-            <div class="form-group inline-group">
-                <div class="form-group small-input">
-                    <label for="zitplaatsen">Zitplaatsen</label>
-                    <input type="text" id="zitplaatsen" name="zitplaatsen" class="readonly-field">
+            <!-- Inline group for seats, Aantal deuren, Massa rijklaar -->
+            <div class="row">
+                <div class="form-group small-input col-md-4">
+                    <label for="seats">Zitplaatsen</label>
+                    <input type="number" id="seats" name="seats" class="form-control"
+                        onkeydown="preventExponential(event)" value="{{ $carInfo[0]->aantal_zitplaatsen ?? '' }}">
                 </div>
-                <div class="form-group small-input">
-                    <label for="aantal_deuren">Aantal deuren</label>
-                    <input type="text" id="aantal_deuren" name="aantal_deuren" class="readonly-field">
+                <div class="form-group small-input col-md-4">
+                    <label for="doors">Aantal deuren</label>
+                    <input type="number" id="doors" name="doors" class="form-control"
+                        onkeydown="preventExponential(event)" value="{{ $carInfo[0]->aantal_deuren ?? '' }}">
                 </div>
-                <div class="form-group small-input">
-                    <label for="massa_rijklaar">Massa rijklaar</label>
-                    <input type="text" id="massa_rijklaar" name="massa_rijklaar" class="readonly-field">
+                <div class="form-group small-input col-md-4">
+                    <label for="weight">Massa rijklaar</label>
+                    <input type="number" id="weight" name="weight" class="form-control"
+                        onkeydown="preventExponential(event)" value="{{ $carInfo[0]->massa_rijklaar ?? '' }}">
                 </div>
             </div>
 
             <!-- Inline group for Jaar van productie, Kleur -->
-            <div class="form-group inline-group">
-                <div class="form-group">
-                    <label for="jaar_van_productie">Jaar van productie</label>
-                    <input type="text" id="production_year" name="production_year">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="production_year">Jaar van productie</label>
+                    <input type="number" id="production_year" name="production_year" onkeydown="preventExponential(event)"
+                        value="{{ \Carbon\Carbon::parse($carInfo[0]->datum_eerste_toelating_dt)->year ?? '' }}">
                 </div>
-                <div class="form-group">
-                    <label for="kleur">Kleur</label>
-                    <input type="text" id="color" name="color">
+                <div class="form-group col-md-6">
+                    <label for="color">Kleur</label>
+                    <input type="text" id="color" name="color" value="{{ $carInfo[0]->eerste_kleur ?? '' }}">
                 </div>
             </div>
 
             <!-- Kilometerstand -->
             <div class="form-group">
-                <label for="kilometerstand">Kilometerstand</label>
-                <input type="text" id="mileage" name="mileage">
+                <label for="mileage">Kilometerstand</label>
+                <div class="input-group">
+                    <input type="number" id="mileage" name="mileage" class="form-control" aria-label="Amount in euro"
+                        onkeydown="preventExponential(event)" value="{{ $carInfo[0]->kilometerstand ?? '' }}">
+                    <span class="input-group-text">km</span>
+                </div>
             </div>
-
             <!-- Vraagprijs -->
             <div class="form-group">
-                <label for="vraagprijs">Vraagprijs</label>
-                <input type="text" id="price" name="price">
+                <label for="price">Vraagprijs</label>
+                <div class="input-group">
+                    <span class="input-group-text">€</span>
+                    <input type="number" id="price" name="price" class="form-control" aria-label="Amount in euro"
+                        onkeydown="preventExponential(event)">
+                </div>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="submit-button">Aanbod afronden</button>
+            <div class="d-grid gap-2">
+                <button type="submit" class="submit-button fs-5">Aanbod afronden</button>
+            </div>
         </form>
     </div>
 @endsection
 
-</html>
+<script>
+    function preventExponential(event) {
+        if (['e', 'E', '+', '-'].includes(event.key)) {
+            event.preventDefault();
+        }
+    }
+</script>

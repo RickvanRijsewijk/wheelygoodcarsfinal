@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Models\Car;
-
-
-// Import the Car model
+use App\Http\Controllers\Api\RdwController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
 class FormController extends Controller
 {
+    protected $rdwController;
+
+    public function __construct(RdwController $rdwController)
+    {
+        $this->rdwController = $rdwController;
+    }
 
     public function carList()
     {
-        // Retrieve all cars from the database
-        $cars = Car::all(); // You can use Car::paginate() for pagination if needed
+        // Retrieve all cars from the database with pagination
+        $cars = Car::where('status', 'Te koop')->paginate(10); // 10 cars per page
 
         // Pass the cars data to the view
         return view('layouts.alle-autos', compact('cars'));
     }
+
     public function submitForm(Request $request)
     {
         // Validate form input data
@@ -28,39 +33,55 @@ class FormController extends Controller
             'license_plate' => 'required|string|max:255',
         ]);
 
-        // Redirect to the next page with input data
+        $carInfo = $this->rdwController->getNumberPlateInfo($validatedData['license_plate']);
+
+        if ($carInfo->getStatusCode() == 200) {
+            $carInfo = $carInfo->getData();
+            session(['carInfo' => $carInfo]);
+        } else {
+            return redirect()->back()->withErrors(['api_error' => 'Failed to retrieve car information from the API.']);
+        }
+
         return redirect()->route('next-page.show')->with('inputText', $validatedData['license_plate']);
     }
 
     public function showNextPage(Request $request)
     {
-        // Get inputText from session, default to an empty string if not present
         $inputText = session('inputText', '');
+        $carInfo = session('carInfo', []);
 
-        return view('layouts.next-page', compact('inputText'));
+        return view('layouts.next-page', compact('inputText', 'carInfo'));
     }
 
     public function SaveToDB(Request $request)
     {
-
-        // Validate the input data
         $validatedData = $request->validate([
-            'license_plate' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'license_plate' => 'required|string|max:255',
             'mileage' => 'required|integer',
+            'seats' => 'required|integer',
+            'doors' => 'required|integer',
+            'weight' => 'required|integer',
             'production_year' => 'required|integer',
             'color' => 'required|string|max:255',
         ]);
 
-        // Create a new Car record with the validated license_plate and user_id
         Car::create([
             'user_id' => Auth::id(),
             'license_plate' => $validatedData['license_plate'],
+            'brand' => $validatedData['brand'],
+            'model' => $validatedData['model'],
+            'seats' => $validatedData['seats'],
+            'doors' => $validatedData['doors'],
+            'weight' => $validatedData['weight'],
             'price' => $validatedData['price'],
             'mileage' => $validatedData['mileage'],
             'production_year' => $validatedData['production_year'],
             'color' => $validatedData['color'],
-            'status' => 'Te koop'
+            'status' => 'Te koop',
+            'sold_at' => $request['status'] === 'Verkocht' ? now() : null,
         ]);
 
         return redirect()->route('mijn-aanbod')->with('success', 'Auto succesvol toegevoegd.');
@@ -141,7 +162,21 @@ class FormController extends Controller
     {
         $car = Car::findOrFail($id);
         $car->status = $car->status === 'Te koop' ? 'Verkocht' : 'Te koop';
+        $car->sold_at = $car->status === 'Verkocht' ? now() : null;
         $car->save();
         return redirect()->route('mijn-aanbod')->with('success', 'Status successvol geüpdate!');
+    }
+
+    public function getCarDetails($id)
+    {
+        $car = Car::with('user')->findOrFail($id);
+        return view('layouts.car-details', compact('car'));
+    }
+
+    public function generatePDF($id)
+    {
+        $car = Car::with('user')->findOrFail($id);
+        $pdf = Pdf::loadView('car.pdf', compact('car'));
+        return $pdf->download('car-details.pdf');
     }
 }

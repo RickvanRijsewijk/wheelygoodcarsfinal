@@ -9,69 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Mijn Aanbod</title>
         <style>
-            .car-card {
-                border: 1px solid #ccc;
-                padding: 20px;
-                margin-bottom: 20px;
-                border-radius: 10px;
-                background-color: #f9f9f9;
-                cursor: pointer;
-                text-decoration: none;
-                color: inherit;
-                display: block;
-            }
 
-            .car-card img {
-                object-fit: cover;
-                max-width: 120px;
-                height: 120px;
-                border-radius: 5px;
-            }
-
-            .car-details {
-                margin-top: 10px;
-            }
-
-            .delete-button {
-                background-color: red;
-                color: white;
-                padding: 10px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-
-            .delete-button:hover {
-                background-color: darkred;
-            }
-
-            .close {
-                margin: 2rem;
-            }
-
-            .toast-text-color {
-                color: white;
-            }
-
-            .status-text {
-                color: white;
-                padding: 5px;
-                border-radius: 5px;
-                display: inline;
-            }
-
-            .status-te-koop {
-                background-color: green;
-            }
-
-            .status-verkocht {
-                background-color: red;
-            }
-
-            .btn-primary {
-                color: white !important;
-            }
         </style>
     </head>
 
@@ -107,7 +45,7 @@
             <a href="{{ route('auto.edit', $car->id) }}" class="car-card">
 
                 @if ($car->image)
-                    <img src="{{ $car->image }}" alt="Car Image">
+                    <img src="{{ explode(',', $car->image)[0] }}" alt="Car Image">
                 @else
                     <img src="/images/default-car.jpg" alt="Default Car Image">
                 @endif
