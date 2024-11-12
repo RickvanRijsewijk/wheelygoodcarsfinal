@@ -9,8 +9,6 @@
     @livewireStyles
 </head>
 
-
-
 <body>
     <nav class="navbar navbar-expand-md navbar-dark d-print-none bg-black">
         <div class="container-fluid">
@@ -29,13 +27,10 @@
                                 aanbod</a></li>
                         <li class="nav-item"><a class="nav-link text-light" href="{{ route('aanbod-plaatsen') }}">Aanbod
                                 plaatsen</a></li>
+                        @if (Auth::user()->is_admin)
+                            <li class="nav-item"><a class="nav-link text-light" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
+                        @endif
                     @endauth
-                    </li>
-                    @if (Auth::user()->is_admin)
-                        <li class="nav-item"><a class="nav-link text-light" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
-                    @else
-
-                    @endif
                 </ul>
                 <ul class="navbar-nav">
                     @guest
