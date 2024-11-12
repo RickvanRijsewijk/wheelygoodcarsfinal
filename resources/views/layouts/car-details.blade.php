@@ -83,8 +83,8 @@
     </head>
 
     <body>
-        <div class="toast-container  top-0 end-0 bg-success rounded-3" style="margin-top: 3.5rem;">
-            <div id="toast" class="toast bg-success rounded-3" role="alert" aria-live="assertive" aria-atomic="true"
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="margin-top: 3.5rem;">
+            <div id="liveToast" class="toast bg-success rounded-3" role="alert" aria-live="assertive" aria-atomic="true"
                 data-delay="5000">
                 <div class="d-flex bg-success rounded-3">
                     <div class="toast-body bg-success toast-text-color rounded-3">10 klanten bekeken deze auto vandaag</div>
@@ -94,13 +94,6 @@
             </div>
         </div>
 
-        <script>
-            $(document).ready(function() {
-                setTimeout(function() {
-                    $('#toast').toast('show');
-                }, 2000);
-            });
-        </script>
         <div class="form-container">
             <h1>Auto gegevens</h1>
 
@@ -221,6 +214,11 @@
                             readonly>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <p>Views: {{ $car->views }}</p>
+                    </td>
+                </tr>
             </table>
             <!-- Add the PDF generation button -->
             <div class="mt-4">
@@ -228,12 +226,21 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-        </script>
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script>
-            const carousel = new bootstrap.Carousel('#carouselExample')
+
+        const carousel = new bootstrap.Carousel('#carouselExample')
+
+        $(document).ready(function() {
+            const toastLiveExample = $('#liveToast');
+            const toastBootstrap = new bootstrap.Toast(toastLiveExample[0]);
+
+            setTimeout(() => {
+                toastBootstrap.show();
+            }, 10000);
+        });
         </script>
     </body>
 
-    </html>
 @endsection

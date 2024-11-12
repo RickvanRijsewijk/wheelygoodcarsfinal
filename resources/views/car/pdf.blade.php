@@ -80,7 +80,6 @@
                 <th>Status</th>
                 <td>{{ $car->status }}</td>
             </tr>
-            <!-- Add more fields as needed -->
         </table>
     </div>
 </body>

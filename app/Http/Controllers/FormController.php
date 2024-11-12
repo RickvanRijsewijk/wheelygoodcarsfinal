@@ -66,8 +66,20 @@ class FormController extends Controller
             'weight' => 'required|integer',
             'production_year' => 'required|integer',
             'color' => 'required|string|max:255',
+            'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        // Handle file uploads
+        $imagePaths = [];
+        if ($request->hasFile('pictures')) {
+            foreach ($request->file('pictures') as $file) {
+                $filename = time() . '-' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('uploads', $filename, 'public');
+                $imagePaths[] = '/storage/' . $filePath;
+            }
+        }
+
+        // Save the car details and image paths in the database
         Car::create([
             'user_id' => Auth::id(),
             'license_plate' => $validatedData['license_plate'],
@@ -82,6 +94,7 @@ class FormController extends Controller
             'color' => $validatedData['color'],
             'status' => 'Te koop',
             'sold_at' => $request['status'] === 'Verkocht' ? now() : null,
+            'image' => implode(',', $imagePaths), // Store image paths as a comma-separated string
         ]);
 
         return redirect()->route('mijn-aanbod')->with('success', 'Auto succesvol toegevoegd.');
@@ -141,7 +154,7 @@ class FormController extends Controller
             'production_year' => 'nullable|integer',
             'weight' => 'nullable|integer',
             'color' => 'nullable|string|max:255',
-            'image' => 'nullable|string|max:255',
+            'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         // Zoek de auto en controleer of deze van de ingelogde gebruiker is
@@ -151,12 +164,27 @@ class FormController extends Controller
             return redirect()->route('mijn-aanbod')->with('error', 'Auto niet gevonden of je hebt geen toestemming.');
         }
 
-        // Update de auto met de gevalideerde gegevens
+        // Handle file uploads
+        $imagePaths = [];
+        if ($request->hasFile('pictures')) {
+            foreach ($request->file('pictures') as $file) {
+                $filename = time() . '-' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('uploads', $filename, 'public');
+                $imagePaths[] = '/storage/' . $filePath;
+            }
+        }
+
+        // Update the car with the validated data
         $car->update($validatedData);
+
+        // If there are new images, update the image field
+        if (!empty($imagePaths)) {
+            $car->image = implode(',', $imagePaths); // Store image paths as a comma-separated string
+            $car->save();
+        }
 
         return redirect()->route('mijn-aanbod')->with('success', 'Auto succesvol bijgewerkt.');
     }
-
 
     public function toggleStatus($id)
     {
@@ -179,4 +207,5 @@ class FormController extends Controller
         $pdf = Pdf::loadView('car.pdf', compact('car'));
         return $pdf->download('car-details.pdf');
     }
+
 }

@@ -191,7 +191,7 @@
                 <div class="form-group col-md-6">
                     <label for="production_year">Jaar van productie</label>
                     <input type="number" id="production_year" name="production_year" onkeydown="preventExponential(event)"
-                        value="{{ \Carbon\Carbon::parse($carInfo[0]->datum_eerste_toelating_dt)->year ?? '' }}">
+                        value="{{ isset($carInfo[0]->datum_eerste_toelating_dt) ? \Carbon\Carbon::parse($carInfo[0]->datum_eerste_toelating_dt)->year : '' }}">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="color">Kleur</label>
@@ -216,6 +216,13 @@
                     <input type="number" id="price" name="price" class="form-control" aria-label="Amount in euro"
                         onkeydown="preventExponential(event)">
                 </div>
+            </div>
+
+            <!-- Afbeeldingen -->
+
+            <div class="mb-3">
+                <label for="pictures" class="form-label">Select Pictures</label>
+                <input type="file" name="pictures[]" id="pictures" class="form-control" multiple>
             </div>
 
             <!-- Submit Button -->

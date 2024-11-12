@@ -9,24 +9,22 @@ class Car extends Model
 {
     use HasFactory;
 
-    // Specify the fillable fields to allow mass assignment
-    protected $table = 'cars';
-
     protected $fillable = [
         'user_id',
         'license_plate',
         'brand',
         'model',
-        'price',
-        'mileage',
         'seats',
         'doors',
-        'production_year',
         'weight',
+        'price',
+        'mileage',
+        'production_year',
         'color',
-        'image',
+        'status',
         'sold_at',
-        'views',
+        'image',
+        'views', // Add this line
     ];
 
     public function user()

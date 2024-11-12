@@ -31,6 +31,11 @@
                                 plaatsen</a></li>
                     @endauth
                     </li>
+                    @if (Auth::user()->is_admin)
+                        <li class="nav-item"><a class="nav-link text-light" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
+                    @else
+
+                    @endif
                 </ul>
                 <ul class="navbar-nav">
                     @guest

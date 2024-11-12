@@ -1,14 +1,15 @@
-A1,A2,A3 = 1 punt
+A1,A2,A3 = 1 punt ja
+
 B1 = 1 punt
-F1 = 1 punt
-F2 = 1 punt
-F3 = 1 punt
-F4 = 1 punt
+B2 = 1 punt - checken
+B3 = 1 punt ja
+B6 = 1 punt ja
+
+F1 = 1 punt ja
+F2 = 1 punt ja
+F3 = 1 punt ja
+F4 = 1 punt - ja
 F5 ? = 1 punt
-F6 = 1 punt
-F7 = 1 punt
-F8 = 1 punt
-B2 = 1 punt
-
-
-B1, B2, B3, F3, F4, F5, F6, F7, F8 gemaakt
+F6 = 1 punt ja
+F7 = 1 punt - werkt maar laat wel alles zien onder de resultaten
+F8 = 1 punt ja
