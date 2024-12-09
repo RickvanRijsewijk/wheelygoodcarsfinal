@@ -38,8 +38,7 @@
                 </ul>
                 <ul class="navbar-nav">
                     @guest
-                        <li class="nav-item"><a class="nav-link text-secondary"
-                                href="{{ route('register') }}">Registreren</a></li>
+                        <li class="nav-item"><a class="nav-link text-secondary" href="{{ route('register') }}">Registreren</a></li>
                         <li class="nav-item"><a class="nav-link text-secondary" href="{{ route('login') }}">Inloggen</a>
                         </li>
                     @endguest
@@ -105,9 +104,9 @@
                         datasets: [{
                             label: 'Aantal auto\'s aangeboden',
                             data: [data.totalCars],
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -126,9 +125,9 @@
                         datasets: [{
                             label: 'Aantal verkocht',
                             data: [data.soldCars],
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
                             borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -147,9 +146,9 @@
                         datasets: [{
                             label: 'Aantal vandaag aangeboden',
                             data: [data.todayCars],
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
                             borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -168,9 +167,9 @@
                         datasets: [{
                             label: 'Aantal aanbieders',
                             data: [data.providers],
-                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            backgroundColor: 'rgba(255, 206, 86, 0.5)',
                             borderColor: 'rgba(255, 206, 86, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -189,9 +188,9 @@
                         datasets: [{
                             label: 'Aantal views vandaag',
                             data: [data.viewsToday],
-                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
                             borderColor: 'rgba(153, 102, 255, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -210,9 +209,9 @@
                         datasets: [{
                             label: 'Gemiddeld aantal auto\'s per aanbieder',
                             data: [data.avgCarsPerProvider],
-                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            backgroundColor: 'rgba(255, 159, 64, 0.5)',
                             borderColor: 'rgba(255, 159, 64, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -232,22 +231,22 @@
                             label: 'Overview',
                             data: [data.totalCars, data.soldCars, data.todayCars, data.providers, data.viewsToday, data.avgCarsPerProvider],
                             backgroundColor: [
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(96 235 54 / 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
+                                'rgb(75 192 192 / 0.5)',
+                                'rgb(255 99 133 / 0.5)',
+                                'rgb(96 235 54 / 0.5)',
+                                'rgba(255 207 86 / 0.5)',
+                                'rgba(153 102 255 / 0.5)',
+                                'rgba(255 160 64 / 0.5)'
                             ],
                             borderColor: [
                                 'rgba(75, 192, 192, 1)',
                                 'rgba(255, 99, 132, 1)',
-                                'rgb(60 150 0)',
+                                'rgba(60 150 0 / 1)',
                                 'rgba(255, 206, 86, 1)',
                                 'rgba(153, 102, 255, 1)',
                                 'rgba(255, 159, 64, 1)'
                             ],
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -293,6 +292,9 @@
 
                 avgCarsPerProviderChart.data.datasets[0].data = [data.avgCarsPerProvider];
                 avgCarsPerProviderChart.update();
+
+                overviewChart.data.datasets[0].data = [data.totalCars, data.soldCars, data.todayCars, data.providers, data.viewsToday, data.avgCarsPerProvider];
+                overviewChart.update();
             }
 
             function fetchData() {

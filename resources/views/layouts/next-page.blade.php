@@ -120,7 +120,7 @@
 
     <div class="progress-container">
         <div class="progress" role="progressbar" aria-label="Animated striped example">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%;">Step 2 of 2</div>
+            <div class="progress-bar bg-primary" style="width: 100%;">Stap 2 van 2</div>
         </div>
     </div>
     <a href="{{ route('aanbod-plaatsen') }}">Terug</a>
@@ -150,7 +150,7 @@
         </div>
 
         <!-- Display prefilled form field -->
-        <form action="{{ route('aanbod.toDB') }}" method="POST">
+        <form action="{{ route('aanbod.toDB') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <input style="display: none" type="text" value="{{ $inputText }}" name="license_plate">

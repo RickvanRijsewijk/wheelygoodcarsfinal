@@ -19,7 +19,7 @@
 
     <div class="progress-container">
         <div class="progress" role="progressbar" aria-label="Animated striped example">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 50%;">Step 1 of 2</div>
+            <div class="progress-bar bg-primary" style="width: 50%;">Stap 1 van 2</div>
         </div>
     </div>
 

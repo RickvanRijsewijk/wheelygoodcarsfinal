@@ -24,7 +24,8 @@ class Car extends Model
         'status',
         'sold_at',
         'image',
-        'views', // Add this line
+        'views',
+        'tags'
     ];
 
     public function user()

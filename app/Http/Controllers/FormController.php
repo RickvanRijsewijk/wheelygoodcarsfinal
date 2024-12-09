@@ -7,6 +7,7 @@ use App\Models\Car;
 use App\Http\Controllers\Api\RdwController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use App\Events\CarViewed;
 
 class FormController extends Controller
 {
@@ -198,6 +199,8 @@ class FormController extends Controller
     public function getCarDetails($id)
     {
         $car = Car::with('user')->findOrFail($id);
+        // $car->increment('views');
+        broadcast(new CarViewed($car));
         return view('layouts.car-details', compact('car'));
     }
 

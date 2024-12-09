@@ -87,7 +87,7 @@
             <div id="liveToast" class="toast bg-success rounded-3" role="alert" aria-live="assertive" aria-atomic="true"
                 data-delay="5000">
                 <div class="d-flex bg-success rounded-3">
-                    <div class="toast-body bg-success toast-text-color rounded-3">10 klanten bekeken deze auto vandaag</div>
+                    <div class="toast-body bg-success toast-text-color rounded-3">{{ $car->views }} klanten bekeken deze auto vandaag</div>
                     <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
                         aria-label="Close"></button>
                 </div>
@@ -216,7 +216,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Views: {{ $car->views }}</p>
+                        <p>Views: <span id="view-count">{{ $car->views }}</span></p>
                     </td>
                 </tr>
             </table>
@@ -228,6 +228,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/laravel-echo/dist/echo.iife.js"></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         <script>
 
         const carousel = new bootstrap.Carousel('#carouselExample')
@@ -239,6 +241,13 @@
             setTimeout(() => {
                 toastBootstrap.show();
             }, 10000);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            Echo.channel('car.{{ $car->id }}')
+                .listen('CarViewed', (e) => {
+                    document.getElementById('view-count').innerText = e.views;
+                });
         });
         </script>
     </body>

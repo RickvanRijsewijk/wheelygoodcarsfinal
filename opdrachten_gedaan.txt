@@ -1,9 +1,11 @@
 A1,A2,A3 = 1 punt ja
 
-B1 = 1 punt
+B1 = 1 punt ja
 B2 = 1 punt - checken
 B3 = 1 punt ja
 B6 = 1 punt ja
+B7 = 1 punt - niet af
+B8 = 1 punt ja
 
 F1 = 1 punt ja
 F2 = 1 punt ja

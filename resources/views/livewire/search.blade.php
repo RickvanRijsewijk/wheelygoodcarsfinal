@@ -25,7 +25,7 @@
                 </div>
             @endforeach
         @elseif ($searchTerm)
-            <p>No cars found matching your search term.</p>
+            <p>No cars found matching <strong> {{ $searchTerm }}</strong></p>
         @endif
     </div>
 </div>
