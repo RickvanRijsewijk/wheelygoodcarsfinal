@@ -118,11 +118,59 @@
         }
     </style>
 
-    <div class="progress-container">
-        <div class="progress" role="progressbar" aria-label="Animated striped example">
-            <div class="progress-bar bg-primary" style="width: 100%;">Stap 2 van 2</div>
+<div class="progress-container mt-3">
+    <div class="progress" role="progressbar" aria-label="Animated striped example">
+        <div class="progress-bar bg-primary" style="width: 25%; transition: width 1s;">
+            <span class="progress-text">25%</span>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputs = document.querySelectorAll('input');
+            var progressBar = document.querySelector('.progress-bar');
+            var progressText = document.querySelector('.progress-text');
+            var baseProgress = 20;
+            var increment = (100 - baseProgress) / inputs.length;
+
+            function updateProgress() {
+                var filledInputs = Array.from(inputs).filter(input => input.value.trim() !== '').length;
+                var newProgress = baseProgress + (filledInputs * increment);
+                var roundedProgress = Math.round(newProgress);
+                animateProgressText(parseInt(progressText.textContent), roundedProgress);
+                progressBar.style.width = roundedProgress + '%';
+            }
+
+            function animateProgressText(start, end) {
+                var duration = 1000;
+                var range = end - start;
+                var stepTime = Math.abs(Math.floor(duration / range));
+                var startTime = new Date().getTime();
+                var endTime = startTime + duration;
+                var timer;
+
+                function run() {
+                    var now = new Date().getTime();
+                    var remaining = Math.max((endTime - now) / duration, 0);
+                    var value = Math.round(end - (remaining * range));
+                    progressText.textContent = value + '%';
+                    if (value == end) {
+                        clearInterval(timer);
+                    }
+                }
+
+                timer = setInterval(run, stepTime);
+                run();
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+            });
+
+            updateProgress();
+        });
+    </script>
+</div>
+
     <a href="{{ route('aanbod-plaatsen') }}">Terug</a>
 
     <div class="form-container">

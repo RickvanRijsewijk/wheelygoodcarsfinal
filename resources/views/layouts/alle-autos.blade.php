@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>All Cars</h1>
+    <h1 class="mt-5">All Cars</h1>
     <div>
         @livewire('search')
     </div>
+
     <div class="car-container">
         @foreach ($cars as $car)
             @if ($car->status == 'Te koop')

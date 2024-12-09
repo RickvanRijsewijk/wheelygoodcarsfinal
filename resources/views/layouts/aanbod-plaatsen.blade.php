@@ -17,10 +17,29 @@
         }
     </style>
 
-    <div class="progress-container">
+    <div class="progress-container mt-3">
         <div class="progress" role="progressbar" aria-label="Animated striped example">
-            <div class="progress-bar bg-primary" style="width: 50%;">Stap 1 van 2</div>
+            <div class="progress-bar bg-primary" style="width: 10%; transition: width 1s;">
+            <span class="progress-text">10%</span>
+            </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            var licensePlateInput = document.getElementById('license_plate');
+            var progressBar = document.querySelector('.progress-bar');
+            var progressText = document.querySelector('.progress-text');
+
+            licensePlateInput.addEventListener('focus', function() {
+                progressBar.style.width = '20%';
+                progressText.textContent = '20%';
+            });
+
+            licensePlateInput.addEventListener('blur', function() {
+                progressBar.style.width = '10%';
+                progressText.textContent = '10%';
+            });
+            });
+        </script>
     </div>
 
     <div class="form-group mt-5 d-flex justify-content-center align-middle">

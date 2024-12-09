@@ -1,5 +1,5 @@
 <div>
-    <input type="text" wire:model.live="searchTerm" placeholder="Search cars..." class="form-control mt-2">
+    <input type="text" wire:model.live="searchTerm" placeholder="Search cars..." class="form-control mt-2 mb-3 border border-primary border-2">
     <div>
         @if (count($results) > 0)
             @foreach ($results as $car)
