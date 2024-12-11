@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/car/{id}/pdf', [FormController::class, 'generatePDF'])->name('car.pdf');
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware('check.admin')->name('admin.dashboard');
     Route::get('/admin/dashboard-data', [AdminController::class, 'getDashboardData'])->name('admin.dashboard-data');
+    Route::get('/cars/{id}/tags', [FormController::class, 'getTags'])->name('cars.tags');
 });
 
 Route::get('/api/numberplate/{plate}', [RdwController::class, 'getNumberPlateInfo']);

@@ -20,16 +20,13 @@ class FormController extends Controller
 
     public function carList()
     {
-        // Retrieve all cars from the database with pagination
-        $cars = Car::where('status', 'Te koop')->paginate(10); // 10 cars per page
+        $cars = Car::where('status', 'Te koop')->paginate(10);
 
-        // Pass the cars data to the view
         return view('layouts.alle-autos', compact('cars'));
     }
 
     public function submitForm(Request $request)
     {
-        // Validate form input data
         $validatedData = $request->validate([
             'license_plate' => 'required|string|max:255',
         ]);
@@ -70,7 +67,6 @@ class FormController extends Controller
             'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Handle file uploads
         $imagePaths = [];
         if ($request->hasFile('pictures')) {
             foreach ($request->file('pictures') as $file) {
@@ -80,7 +76,6 @@ class FormController extends Controller
             }
         }
 
-        // Save the car details and image paths in the database
         Car::create([
             'user_id' => Auth::id(),
             'license_plate' => $validatedData['license_plate'],
@@ -95,7 +90,7 @@ class FormController extends Controller
             'color' => $validatedData['color'],
             'status' => 'Te koop',
             'sold_at' => $request['status'] === 'Verkocht' ? now() : null,
-            'image' => implode(',', $imagePaths), // Store image paths as a comma-separated string
+            'image' => implode(',', $imagePaths),
         ]);
 
         return redirect()->route('mijn-aanbod')->with('success', 'Auto succesvol toegevoegd.');
@@ -103,22 +98,17 @@ class FormController extends Controller
 
     public function getUserCars()
     {
-        // Get the authenticated user's ID
         $userId = Auth::id();
 
-        // Retrieve all cars created by the user
         $userCars = Car::where('user_id', $userId)->get();
 
-        // Pass the cars to the 'mijn-aanbod' view
         return view('layouts.mijn-aanbod', ['cars' => $userCars]);
     }
 
     public function deleteCar($id)
     {
-        // Zoek de auto op basis van het ID en de ingelogde gebruiker
         $car = Car::where('id', $id)->where('user_id', Auth::id())->first();
 
-        // Controleer of de auto gevonden is en behoort tot de ingelogde gebruiker
         if ($car) {
             $car->delete();
             return redirect()->route('mijn-aanbod')->with('success', 'Auto succesvol verwijderd.');
@@ -129,22 +119,17 @@ class FormController extends Controller
 
     public function editCar($id)
     {
-        // Zoek de auto die bij het ID en de ingelogde gebruiker hoort
         $car = Car::where('id', $id)->where('user_id', Auth::id())->first();
 
-        // Controleer of de auto bestaat en de gebruiker eigenaar is
         if (!$car) {
             return redirect()->route('mijn-aanbod')->with('error', 'Auto niet gevonden of je hebt geen toestemming.');
         }
 
-        // Geef de edit-pagina weer met de bestaande gegevens van de auto
         return view('layouts.edit-car', compact('car'));
     }
 
-    // Werk de auto bij met de nieuwe gegevens
     public function updateCar(Request $request, $id)
     {
-        // Validatie van de gegevens
         $validatedData = $request->validate([
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
@@ -158,14 +143,12 @@ class FormController extends Controller
             'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Zoek de auto en controleer of deze van de ingelogde gebruiker is
         $car = Car::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$car) {
             return redirect()->route('mijn-aanbod')->with('error', 'Auto niet gevonden of je hebt geen toestemming.');
         }
 
-        // Handle file uploads
         $imagePaths = [];
         if ($request->hasFile('pictures')) {
             foreach ($request->file('pictures') as $file) {
@@ -175,12 +158,10 @@ class FormController extends Controller
             }
         }
 
-        // Update the car with the validated data
         $car->update($validatedData);
 
-        // If there are new images, update the image field
         if (!empty($imagePaths)) {
-            $car->image = implode(',', $imagePaths); // Store image paths as a comma-separated string
+            $car->image = implode(',', $imagePaths);
             $car->save();
         }
 
@@ -209,6 +190,12 @@ class FormController extends Controller
         $car = Car::with('user')->findOrFail($id);
         $pdf = Pdf::loadView('car.pdf', compact('car'));
         return $pdf->download('car-details.pdf');
+    }
+
+    public function getTags($id)
+    {
+        $car = Car::with('tags')->findOrFail($id);
+        return response()->json($car->tags);
     }
 
 }

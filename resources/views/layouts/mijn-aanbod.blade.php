@@ -51,7 +51,8 @@
                         <p class="align-self-center"><strong>{{ $car->brand }} {{ $car->model }} {{ $car->production_year}}</strong></p>
 
                         <div class="d-flex justify-content-between align-self-center">
-                            @if (!empty($car->tags))
+
+                            @if ($car->tags))
                                 @foreach (explode(",", $car->tags) as $tag)
                                     <span class="badge text-bg-info"> {{ $tag }} </span>
                                 @endforeach
